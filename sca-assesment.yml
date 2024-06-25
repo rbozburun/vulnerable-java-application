@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: 13.162
+
+steps:
+- task: FortifySCA@7
+  inputs:
+    applicationType: 'java'
+    fortifyBuildId: 'JavaVulnAppDataDog'
+    scaVerbose: true
+    scaDebug: true
+    fortifyScanType: 'LocalScan'
+    runFortifyUpload: true
+    fortifyServerName: 'SSC'
+    fortifyApplicationIdentifierType: 'byId'
+    fortifyApplicationVersionId: '10017'
+    fortifyBuildFailureCriteria: '[fortify priority order]:critical or [fortify priority order]:high'
+    taskResultForBuildFailureCriteria: 'FAIL'
