@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool: 13.162
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+  
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'sourceanalyzer -b JavaVulnAppDataDog C:\vulnapps\vulnerable-java-application-main' 
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'scancentral -sscurl https://fortify.cw:8443/ssc -ssctoken 07f6ee7d-3d2c-4d0a-b875-36ca9c673cc0 start ‑upload -versionid 10017 -uptoken 07f6ee7d-3d2c-4d0a-b875-36ca9c673cc0 -b JavaVulnAppDataDog -scan'
