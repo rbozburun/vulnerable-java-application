@@ -13,7 +13,7 @@ pool: Default
 steps:
 - task: CmdLine@2
   inputs:
-    script: 'sourceanalyzer -b gradle_j gradlew wrapper --gradle-version 8.8'
+    script: '.\gradlew.bat wrapper --gradle-version 8.8'
 - task: CmdLine@2
   inputs:
     script: |
