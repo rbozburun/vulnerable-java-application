@@ -11,9 +11,17 @@ trigger:
 pool: Default
 
 steps:
-- task: CmdLine@2
-  inputs:
-    script: '.\gradlew.bat wrapper --gradle-version 8.8'
+- script: |
+    if not defined P_BASE_NAMECLASSPATH (
+        set P_BASE_NAMECLASSPATH=default_value
+        echo P_BASE_NAMECLASSPATH is set to default value: %P_BASE_NAMECLASSPATH%.
+    ) else (
+        echo P_BASE_NAMECLASSPATH is defined as %P_BASE_NAMECLASSPATH%.
+    )
+  displayName: 'Set default value for P_BASE_NAMECLASSPATH if not defined'
+
+- script: .\gradlew.bat wrapper --gradle-version 8.8
+  displayName: 'Run Gradle Wrapper'
 - task: CmdLine@2
   inputs:
     script: |
