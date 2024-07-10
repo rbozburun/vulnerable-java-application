@@ -3,22 +3,36 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+# RUN SCA ONLY
+
 trigger:
 - main
 
-pool: 13.162
+pool: Default
 
 steps:
+- task: CmdLine@2
+  inputs:
+    script: 'sourceanalyzer -b gradle_j gradlew wrapper --gradle-version 8.8'
+- task: CmdLine@2
+  inputs:
+    script: |
+      set ANDROID_HOME=$(ANDROID_HOME)
+      set ANDROID_SDK_ROOT=$(ANDROID_SDK_ROOT)
+- task: CmdLine@2
+  inputs:
+    script: 'echo %ANDROID_HOME%'
 - task: FortifySCA@7
   inputs:
-    applicationType: 'java'
-    fortifyBuildId: 'JavaVulnAppDataDog'
+    applicationType: 'other'
+    buildToolOptions: 'gradlew clean build'
+    fortifyBuildId: 'gradle_j'
     scaVerbose: true
     scaDebug: true
-    fortifyScanType: 'LocalScan'
-    runFortifyUpload: true
-    fortifyServerName: 'SSC'
-    fortifyApplicationIdentifierType: 'byId'
-    fortifyApplicationVersionId: '10017'
-    fortifyBuildFailureCriteria: '[fortify priority order]:critical or [fortify priority order]:high'
+    fortifyScanType: 'ScanCentralScan'
+    scanCentralFortifyServerName: 'SSC'
+    scanCentralRunFortifyUpload: true
+    scanCentralFortifyApplicationIdentifierType: 'byId'
+    scanCentralFortifyApplicationVersionId: '10020'
+    fortifyBuildFailureCriteria: '[fortify priority order]:critical'
     taskResultForBuildFailureCriteria: 'FAIL'
